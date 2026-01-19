@@ -1,13 +1,13 @@
 import type { Request, Response } from "express";
 import {
-  getTodoListController,
-  postTodoListController,
+  handleAddTodoListController,
+  handleGetTodoListController,
+  handleDeleteTodoListController,
 } from "../controller/todoListController.js";
 
 export const getTodoList = async (req: Request, res: Response) => {
   try {
-    const todoList = await getTodoListController(req, res);
-    console.log(todoList);
+    const todoList = await handleGetTodoListController(req, res);
 
     return res.status(200).json({ success: true, todos: todoList });
   } catch (error) {
@@ -19,11 +19,30 @@ export const getTodoList = async (req: Request, res: Response) => {
 
 export const setTodoList = async (req: Request, res: Response) => {
   try {
-    const result = await postTodoListController(req);
+    const result = await handleAddTodoListController(req);
     return res.status(201).json(result);
   } catch (error: any) {
-    return res
-      .status(500)
-      .json({ success: false, error: `Todo Adding Failed : ${error.message}` });
+    return res.status(500).json({
+      success: false,
+      error: `Todo Adding Failed : ${error.message}`,
+    });
+  }
+};
+
+export const deleteTodoList = async (req: Request, res: Response) => {
+  try {
+    const result = await handleDeleteTodoListController(
+      req.params._id as string,
+    );
+    return res.status(200).json({
+      success: true,
+      message: "Todo Deleted Successfully",
+      result: result,
+    });
+  } catch (error: any) {
+    return res.status(500).json({
+      success: false,
+      error: `Todo Deletion Failed : ${error.message}`,
+    });
   }
 };
