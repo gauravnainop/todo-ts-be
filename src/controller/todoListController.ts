@@ -1,27 +1,28 @@
 import type { Request, Response } from "express";
-import TodoList from "../models/todoListModel.js";
-import type {TodoListType } from "../types/todoList.js";
-import {getTodoList, postTodoList} from "../service/todoService.js"
-export const  getTodoListController = async (req: Request, res: Response) => {
+import { getTodoList, postTodoList } from "../service/todoService.js";
+export const getTodoListController = async (req: Request, res: Response) => {
   try {
-    const todos = await getTodoList(req, res)
-    return todos
-  } catch (error:any) {
-   return error
-  }
-}
-
-export const postTodoListController = async (data: TodoListType[])=>{
-  try {
-    const result = await postTodoList(data)
-    return {
-      result : result,
-      success : true
-    }
+    const todos = await getTodoList(req, res);
+    return todos;
   } catch (error: any) {
-    return {
-      error : error.message,
-      success : false
-    }
+    return error;
   }
-}
+};
+
+export const postTodoListController = async (data: any) => {
+  try {
+    console.log(data.body);
+
+    const result = await postTodoList(data.body);
+    const dataArray = Array.isArray(result) ? result : [result];
+    return {
+      length: dataArray.length,
+      message: "Data Added Successfully",
+      data: result,
+      success: true,
+    };
+  } catch (error: any) {
+    console.error("Mongoose Error : ", error);
+    throw error;
+  }
+};
