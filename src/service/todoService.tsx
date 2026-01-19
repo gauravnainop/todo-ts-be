@@ -1,19 +1,19 @@
 import type { Request, Response } from "express";
 import TodoList from "../models/todoListModel.js";
 import type {TodoListType } from "../types/todoList.js";
-import {getTodoList, postTodoList} from "../service/todoService.js"
-export const  getTodoListController = async (req: Request, res: Response) => {
+
+export const  getTodoList = async (req: Request, res : Response) => {
   try {
-    const todos = await getTodoList(req, res)
+    const todos = await TodoList.find()    
     return todos
   } catch (error:any) {
    return error
   }
 }
 
-export const postTodoListController = async (data: TodoListType[])=>{
+export const postTodoList = async (data: TodoListType[])=>{
   try {
-    const result = await postTodoList(data)
+    const result = await TodoList.insertMany(data, {ordered: false})
     return {
       result : result,
       success : true
