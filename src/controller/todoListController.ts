@@ -1,6 +1,13 @@
 import type { Request, Response } from "express";
-import { getTodoList, postTodoList } from "../service/todoService.js";
-export const getTodoListController = async (req: Request, res: Response) => {
+import {
+  getTodoList,
+  postTodoList,
+  deleteTodoList,
+} from "../service/todoService.js";
+export const handleGetTodoListController = async (
+  req: Request,
+  res: Response,
+) => {
   try {
     const todos = await getTodoList(req, res);
     return todos;
@@ -9,10 +16,8 @@ export const getTodoListController = async (req: Request, res: Response) => {
   }
 };
 
-export const postTodoListController = async (data: any) => {
+export const handleAddTodoListController = async (data: any) => {
   try {
-    console.log(data.body);
-
     const result = await postTodoList(data.body);
     const dataArray = Array.isArray(result) ? result : [result];
     return {
@@ -24,5 +29,18 @@ export const postTodoListController = async (data: any) => {
   } catch (error: any) {
     console.error("Mongoose Error : ", error);
     throw error;
+  }
+};
+
+export const handleDeleteTodoListController = async (id: string) => {
+  try {
+    const result = await deleteTodoList(id);
+    return {
+      message: "Todo Deleted Successfully",
+      data: result,
+      success: true,
+    };
+  } catch (error) {
+    console.error("Mongoose Error : ", error);
   }
 };
